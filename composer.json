@@ -11,8 +11,11 @@
   "autoload-dev": {
     "psr-4": {}
   },
-  "require": {},
-  "require-dev": {},
+  "require-dev": {
+    "orchestra/testbench": "^8.5",
+    "nunomaduro/collision": "^7.7",
+    "laravel/pint": "^1.10"
+  },
   "extra": {
     "laravel": {
       "providers": [

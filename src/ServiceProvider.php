@@ -4,7 +4,17 @@ declare(strict_types=1);
 
 namespace Theozebua\LaravelRepository;
 
-final class ServiceProvider
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+
+final class ServiceProvider extends LaravelServiceProvider
 {
-    // 
+    public function register(): void
+    {
+        // 
+    }
+
+    public function boot(): void
+    {
+        // 
+    }
 }
