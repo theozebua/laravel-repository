@@ -3,13 +3,19 @@
   "description": "Just a simple artisan command to create your repository pattern files.",
   "type": "library",
   "license": "MIT",
+  "scripts": {
+    "fix-style": "vendor/bin/pint",
+    "test": "vendor/bin/testbench package:test"
+  },
   "autoload": {
     "psr-4": {
       "Theozebua\\LaravelRepository\\": "src/"
     }
   },
   "autoload-dev": {
-    "psr-4": {}
+    "psr-4": {
+      "Theozebua\\LaravelRepository\\Tests\\": "tests/"
+    }
   },
   "require-dev": {
     "orchestra/testbench": "^8.5",
