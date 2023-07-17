@@ -1,0 +1,25 @@
+{
+  "name": "theozebua/laravel-repository",
+  "description": "Just a simple artisan command to create your repository pattern files.",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Theozebua\\LaravelRepository\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {}
+  },
+  "require": {},
+  "require-dev": {},
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Theozebua\\LaravelRepository\\ServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
