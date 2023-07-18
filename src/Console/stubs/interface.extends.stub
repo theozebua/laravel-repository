@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ NAMESPACE }};
+
+{{ USE_STATEMENTS }}
+
+interface {{ INTERFACE }} extends {{ INTERFACES }}
+{
+    //
+}
