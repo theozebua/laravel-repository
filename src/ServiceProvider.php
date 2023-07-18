@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use Illuminate\Support\Stringable;
+use Theozebua\LaravelRepository\Console\Commands\RepositoryMakeCommand;
 use Theozebua\LaravelRepository\Macros\Stringable\FullyQualifiedClassName;
 
 final class ServiceProvider extends LaravelServiceProvider
@@ -21,6 +22,12 @@ final class ServiceProvider extends LaravelServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                RepositoryMakeCommand::class,
+            ]);
+        }
+
         $this->mergeConfigFrom(__DIR__ . '/config/laravel-repository.php', 'laravel-repository');
 
         $this->publishes([
