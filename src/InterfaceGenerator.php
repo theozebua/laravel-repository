@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
-use Theozebua\LaravelRepository\Enums\FileTypeEnum;
 use Theozebua\LaravelRepository\Enums\StubEnum;
 
 final class InterfaceGenerator extends Generator
@@ -16,10 +15,9 @@ final class InterfaceGenerator extends Generator
     protected bool $wantsToExtend;
 
     public function __construct(
-        private ?FileTypeEnum $type = null,
         private Stringable|string|null $file = null,
     ) {
-        parent::__construct($type);
+        parent::__construct();
 
         $this->setFile(
             Config::get('laravel-repository.directories.interfaces')

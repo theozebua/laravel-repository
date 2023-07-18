@@ -46,7 +46,7 @@ final class RepositoryMakeCommand extends Command
             return;
         }
 
-        $generator = InterfaceGenerator::make(FileTypeEnum::INTERFACE, $name);
+        $generator = InterfaceGenerator::make($name);
 
         $existingInterfaces = File::existingInterfaces();
 

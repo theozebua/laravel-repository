@@ -43,7 +43,7 @@ final class GenerateInterfaceTest extends TestCase
             )
             ->expectsQuestion('What is the name of your interface?', $interface);
 
-        InterfaceGenerator::make(FileTypeEnum::INTERFACE, $interface)
+        InterfaceGenerator::make($interface)
             ->destroy();
     }
 
@@ -62,7 +62,7 @@ final class GenerateInterfaceTest extends TestCase
             ->expectsQuestion('What is the name of your interface?', $interface)
             ->expectsConfirmation('Do you want to extends another interfaces?');
 
-        InterfaceGenerator::make(FileTypeEnum::INTERFACE, $interface)
+        InterfaceGenerator::make($interface)
             ->destroy();
     }
 
@@ -87,7 +87,7 @@ final class GenerateInterfaceTest extends TestCase
                 $existingInterfaces,
             );
 
-        InterfaceGenerator::make(FileTypeEnum::INTERFACE, $interface)
+        InterfaceGenerator::make($interface)
             ->destroy();
     }
 }
