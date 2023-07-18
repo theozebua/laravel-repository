@@ -6,7 +6,6 @@ namespace Theozebua\LaravelRepository\Tests;
 
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Theozebua\LaravelRepository\Enums\FileTypeEnum;
 use Theozebua\LaravelRepository\InterfaceGenerator;
 use Theozebua\LaravelRepository\Support\File;
 
@@ -23,7 +22,7 @@ abstract class TestCase extends BaseTestCase
     protected function generateDummyInterfaces(): void
     {
         Collection::make($this->interfaces)->each(function (string $interface): void {
-            InterfaceGenerator::make(FileTypeEnum::INTERFACE, $interface)
+            InterfaceGenerator::make($interface)
                 ->generate();
         });
     }
@@ -31,7 +30,7 @@ abstract class TestCase extends BaseTestCase
     protected function destroyDummyInterfaces(): void
     {
         Collection::make($this->interfaces)->each(function (string $interface): void {
-            InterfaceGenerator::make(FileTypeEnum::INTERFACE, $interface)
+            InterfaceGenerator::make($interface)
                 ->destroy();
         });
     }

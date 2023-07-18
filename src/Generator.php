@@ -7,7 +7,6 @@ namespace Theozebua\LaravelRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
-use Theozebua\LaravelRepository\Enums\FileTypeEnum;
 
 abstract class Generator implements GeneratorInterface
 {
@@ -17,15 +16,14 @@ abstract class Generator implements GeneratorInterface
     private string $stub;
 
     public function __construct(
-        private ?FileTypeEnum $type = null,
         private Stringable|string|null $file = null,
     ) {
         //
     }
 
-    final public static function make(FileTypeEnum $type, string $file): static
+    final public static function make(string $file): static
     {
-        return new static($type, $file);
+        return new static($file);
     }
 
     final public function setChosenInterfaces(Collection $interfaces): static
@@ -50,18 +48,6 @@ abstract class Generator implements GeneratorInterface
     final protected function stub(): string
     {
         return $this->stub;
-    }
-
-    final protected function setType(FileTypeEnum $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    final protected function type(): FileTypeEnum
-    {
-        return $this->type;
     }
 
     final protected function setFile(string $file): static
