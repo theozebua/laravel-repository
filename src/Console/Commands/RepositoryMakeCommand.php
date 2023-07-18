@@ -7,11 +7,9 @@ namespace Theozebua\LaravelRepository\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
-use Symfony\Component\Finder\SplFileInfo;
 use Theozebua\LaravelRepository\Enums\FileTypeEnum;
 use Theozebua\LaravelRepository\InterfaceGenerator;
+use Theozebua\LaravelRepository\Support\File;
 
 final class RepositoryMakeCommand extends Command
 {
@@ -50,12 +48,7 @@ final class RepositoryMakeCommand extends Command
 
         $generator = InterfaceGenerator::make(FileTypeEnum::INTERFACE, $name);
 
-        $existingInterfaces = Collection::make(File::allFiles($path))
-            ->map(function (SplFileInfo $splFileInfo): string {
-                return Str::of($splFileInfo->getPathname())
-                    ->className(Config::get('laravel-repository.delimiter'))
-                    ->value();
-            });
+        $existingInterfaces = File::existingInterfaces();
 
         if (
             $existingInterfaces->isNotEmpty() &&

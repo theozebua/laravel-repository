@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Theozebua\LaravelRepository\Tests;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Symfony\Component\Finder\SplFileInfo;
 use Theozebua\LaravelRepository\Enums\FileTypeEnum;
 use Theozebua\LaravelRepository\InterfaceGenerator;
+use Theozebua\LaravelRepository\Support\File;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -41,11 +38,6 @@ abstract class TestCase extends BaseTestCase
 
     protected function existingInterfaces(): Collection
     {
-        return Collection::make(File::allFiles(Config::get('laravel-repository.directories.interfaces')))
-            ->map(function (SplFileInfo $splFileInfo): string {
-                return Str::of($splFileInfo->getPathname())
-                    ->className(Config::get('laravel-repository.delimiter'))
-                    ->value();
-            });
+        return File::existingInterfaces();
     }
 }
