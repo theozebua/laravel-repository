@@ -13,9 +13,9 @@ final class GenerateInterfaceTest extends TestCase
 {
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $this->destroyDummyInterfaces();
+
+        parent::tearDown();
     }
 
     public function testInterfaceIsAlreadyExists(): void
