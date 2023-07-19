@@ -6,6 +6,7 @@ namespace Theozebua\LaravelRepository\Tests\Feature;
 
 use Theozebua\LaravelRepository\Enums\FileTypeEnum;
 use Theozebua\LaravelRepository\InterfaceGenerator;
+use Theozebua\LaravelRepository\Support\File;
 use Theozebua\LaravelRepository\Tests\TestCase;
 
 final class GenerateInterfaceTest extends TestCase
@@ -41,10 +42,16 @@ final class GenerateInterfaceTest extends TestCase
                 FileTypeEnum::INTERFACE->value,
                 FileTypeEnum::list(),
             )
-            ->expectsQuestion('What is the name of your interface?', $interface);
+            ->expectsQuestion('What is the name of your interface?', $interface)
+            ->expectsOutputToContain('created successfully');
 
-        InterfaceGenerator::make($interface)
-            ->destroy();
+        $path = $this->getInterfacePath($interface . '.php');
+        $contents = File::get($path);
+
+        $this->assertFileExists($path);
+        $this->assertStringContainsString($interface, $contents);
+
+        InterfaceGenerator::make($interface)->destroy();
     }
 
     public function testGenerateInterfaceWithoutExtendingAnotherInterfaces(): void
@@ -60,10 +67,16 @@ final class GenerateInterfaceTest extends TestCase
                 FileTypeEnum::list(),
             )
             ->expectsQuestion('What is the name of your interface?', $interface)
-            ->expectsConfirmation('Do you want to extends another interfaces?');
+            ->expectsConfirmation('Do you want to extends another interfaces?')
+            ->expectsOutputToContain('created successfully');
 
-        InterfaceGenerator::make($interface)
-            ->destroy();
+        $path = $this->getInterfacePath($interface . '.php');
+        $contents = File::get($path);
+
+        $this->assertFileExists($path);
+        $this->assertStringContainsString($interface, $contents);
+
+        InterfaceGenerator::make($interface)->destroy();
     }
 
     public function testGenerateInterfaceAndExtendsAnotherInterfaces(): void
@@ -85,9 +98,17 @@ final class GenerateInterfaceTest extends TestCase
                 'Please choose interface(s) that you want to extends separated by comma',
                 [$existingInterfaces[0], $existingInterfaces[1]],
                 $existingInterfaces,
-            );
+            )
+            ->expectsOutputToContain('created successfully');
 
-        InterfaceGenerator::make($interface)
-            ->destroy();
+        $path = $this->getInterfacePath($interface . '.php');
+        $contents = File::get($path);
+
+        $this->assertFileExists($path);
+        $this->assertStringContainsString($interface, $contents);
+        $this->assertStringContainsString($existingInterfaces[0], $contents);
+        $this->assertStringContainsString($existingInterfaces[1], $contents);
+
+        InterfaceGenerator::make($interface)->destroy();
     }
 }
