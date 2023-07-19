@@ -12,6 +12,8 @@ use Theozebua\LaravelRepository\Enums\StubEnum;
 
 final class InterfaceGenerator extends Generator
 {
+    use PathTrait;
+
     protected bool $wantsToExtend;
 
     public function __construct(
@@ -19,12 +21,7 @@ final class InterfaceGenerator extends Generator
     ) {
         parent::__construct();
 
-        $this->setFile(
-            Config::get('laravel-repository.directories.interfaces')
-                . '/'
-                . Str::of($file)
-                . '.php',
-        );
+        $this->setFile($this->getInterfacePath($file . '.php'));
 
         $directory = $this->file()->replace('\\', '/')->beforeLast('/')->value();
 
