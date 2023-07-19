@@ -6,5 +6,5 @@ namespace Theozebua\LaravelRepository;
 
 interface GeneratorInterface
 {
-    public function generate(bool $withInterface = false): void;
+    public function generate(bool $withInterfaces = false): void;
 }
