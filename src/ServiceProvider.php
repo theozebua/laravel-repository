@@ -31,7 +31,7 @@ final class ServiceProvider extends LaravelServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/config/laravel-repository.php', 'laravel-repository');
 
         $this->publishes([
-            __DIR__ . '/config/laravel-repository.php' => $this->app->configPath('laravel-repository.php')
+            __DIR__ . '/config/laravel-repository.php' => $this->app->configPath('laravel-repository.php'),
         ], 'laravel-repository-config');
     }
 
