@@ -40,7 +40,7 @@ abstract class TestCase extends BaseTestCase
         return File::existingInterfaces();
     }
 
-    protected function getInterfacePath(string $path): string
+    protected function getInterfacePath(string $path = ''): string
     {
         return Config::get('laravel-repository.directories.interfaces')
             . '/'
