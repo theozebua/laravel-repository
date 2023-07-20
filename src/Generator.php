@@ -61,4 +61,8 @@ abstract class Generator implements GeneratorInterface
     {
         return $this->file;
     }
+
+    abstract protected function withInterfaces(): void;
+
+    abstract protected function withoutInterfaces(): void;
 }

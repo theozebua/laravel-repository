@@ -5,110 +5,111 @@ declare(strict_types=1);
 namespace Theozebua\LaravelRepository\Tests\Feature;
 
 use Theozebua\LaravelRepository\Enums\FileTypeEnum;
-use Theozebua\LaravelRepository\InterfaceGenerator;
+use Theozebua\LaravelRepository\RepositoryGenerator;
 use Theozebua\LaravelRepository\Support\File;
 use Theozebua\LaravelRepository\Tests\TestCase;
 
-final class GenerateInterfaceTest extends TestCase
+final class GenerateRepositoryTest extends TestCase
 {
     protected function tearDown(): void
     {
+        $this->destroyDummyRepositories();
         $this->destroyDummyInterfaces();
 
         parent::tearDown();
     }
 
-    public function testInterfaceIsAlreadyExists(): void
+    public function testRepositoryIsAlreadyExists(): void
     {
-        $this->generateDummyInterfaces();
+        $this->generateDummyRepositories();
 
         $this->artisan('repository:generate')
             ->expectsChoice(
                 'What do you want to generate?',
-                FileTypeEnum::INTERFACE->value,
+                FileTypeEnum::REPOSITORY->value,
                 FileTypeEnum::list(),
             )
-            ->expectsQuestion('What is the name of your interface?', $this->interfaces[0])
+            ->expectsQuestion('What is the name of your repository?', $this->repositories[0])
             ->expectsOutputToContain('is already exists');
     }
 
-    public function testGenerateFirstInterface(): void
+    public function testGenerateFirstRepository(): void
     {
-        $interface = 'TestingInterface';
+        $repository = 'TestingRepository';
 
         $this->artisan('repository:generate')
             ->expectsChoice(
                 'What do you want to generate?',
-                FileTypeEnum::INTERFACE->value,
+                FileTypeEnum::REPOSITORY->value,
                 FileTypeEnum::list(),
             )
-            ->expectsQuestion('What is the name of your interface?', $interface)
+            ->expectsQuestion('What is the name of your repository?', $repository)
             ->expectsOutputToContain('created successfully');
 
-        $path = $this->getInterfacePath($interface . '.php');
+        $path = $this->getRepositoryPath($repository . '.php');
         $contents = File::get($path);
 
         $this->assertFileExists($path);
-        $this->assertStringContainsString($interface, $contents);
+        $this->assertStringContainsString($repository, $contents);
 
-        InterfaceGenerator::make($interface)->destroy();
+        RepositoryGenerator::make($repository)->destroy();
     }
 
-    public function testGenerateInterfaceWithoutExtendingAnotherInterfaces(): void
+    public function testGenerateInterfaceWithoutImplementingAnyInterfaces(): void
     {
         $this->generateDummyInterfaces();
 
-        $interface = 'TestingInterface';
+        $repository = 'TestingRepository';
 
         $this->artisan('repository:generate')
             ->expectsChoice(
                 'What do you want to generate?',
-                FileTypeEnum::INTERFACE->value,
+                FileTypeEnum::REPOSITORY->value,
                 FileTypeEnum::list(),
             )
-            ->expectsQuestion('What is the name of your interface?', $interface)
-            ->expectsConfirmation('Do you want to extends another interfaces?')
+            ->expectsQuestion('What is the name of your repository?', $repository)
+            ->expectsConfirmation('Do you want to implements some interfaces?')
             ->expectsOutputToContain('created successfully');
 
-        $path = $this->getInterfacePath($interface . '.php');
+        $path = $this->getRepositoryPath($repository . '.php');
         $contents = File::get($path);
 
         $this->assertFileExists($path);
-        $this->assertStringContainsString($interface, $contents);
+        $this->assertStringContainsString($repository, $contents);
 
-        InterfaceGenerator::make($interface)->destroy();
+        RepositoryGenerator::make($repository)->destroy();
     }
 
-    public function testGenerateInterfaceAndExtendsAnotherInterfaces(): void
+    public function testGenerateRepositoryAndImplementsSomeInterfaces(): void
     {
         $this->generateDummyInterfaces();
 
-        $interface = 'TestingInterface';
+        $repository = 'TestingRepository';
         $existingInterfaces = $this->existingInterfaces()->toArray();
 
         $this->artisan('repository:generate')
             ->expectsChoice(
                 'What do you want to generate?',
-                FileTypeEnum::INTERFACE->value,
+                FileTypeEnum::REPOSITORY->value,
                 FileTypeEnum::list(),
             )
-            ->expectsQuestion('What is the name of your interface?', $interface)
-            ->expectsConfirmation('Do you want to extends another interfaces?', 'yes')
+            ->expectsQuestion('What is the name of your repository?', $repository)
+            ->expectsConfirmation('Do you want to implements some interfaces?', 'yes')
             ->expectsChoice(
-                'Please choose interface(s) that you want to extends separated by comma',
+                'Please choose interface(s) that you want to implements separated by comma',
                 [$existingInterfaces[0], $existingInterfaces[1]],
                 $existingInterfaces,
             )
             ->expectsOutputToContain('created successfully');
 
-        $path = $this->getInterfacePath($interface . '.php');
+        $path = $this->getRepositoryPath($repository . '.php');
         $contents = File::get($path);
 
         $this->assertFileExists($path);
-        $this->assertStringContainsString($interface, $contents);
+        $this->assertStringContainsString($repository, $contents);
         $this->assertStringContainsString($existingInterfaces[0], $contents);
         $this->assertStringContainsString($existingInterfaces[1], $contents);
 
-        InterfaceGenerator::make($interface)->destroy();
+        RepositoryGenerator::make($repository)->destroy();
     }
 }
