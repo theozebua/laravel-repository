@@ -48,7 +48,35 @@ final class RepositoryGenerator extends Generator
 
     protected function withInterfaces(): void
     {
-        //
+        $this->setStub(StubEnum::REPOSITORY_IMPLEMENTS->value);
+
+        $fullyQualifiedClassName = $this->file()->className(
+            Config::get('laravel-repository.delimiter'),
+        );
+
+        $contents = Str::of(File::get($this->stub()))
+            ->replace(
+                [
+                    '{{ NAMESPACE }}',
+                    '{{ REPOSITORY }}',
+                    '{{ USE_STATEMENTS }}',
+                    '{{ INTERFACES }}',
+                ],
+                [
+                    $fullyQualifiedClassName->beforeLast('\\'),
+                    $fullyQualifiedClassName->afterLast('\\'),
+                    $this->chosenInterfaces()->map(
+                        callback: fn (string $interface): string => "use {$interface};"
+                    )->join("\n"),
+                    $this->chosenInterfaces()->map(
+                        callback: fn (string $interface): string => Str::of($interface)
+                            ->afterLast('\\')
+                            ->value(),
+                    )->join(', '),
+                ],
+            );
+
+        File::put($this->file()->value(), $contents);
     }
 
     protected function withoutInterfaces(): void
