@@ -6,5 +6,5 @@ namespace {{ NAMESPACE }};
 
 class {{ REPOSITORY }}
 {
-    //
+    {{ METHODS }}
 }
