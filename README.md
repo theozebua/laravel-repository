@@ -128,7 +128,7 @@ And the file will be placed in `app/Repositories/Implementations/Repository.php`
 
 > Note: Same as the interface generator, this steps are for the first time you generate a repository when there are no interfaces created before. If you try to generate more repositories afterwards, it will ask you additional questions. See example below.
 
-### Generate A Repository Interface That Implements Some Interfaces
+### Generate A Repository Class That Implements Some Interfaces
 
 Run:
 
