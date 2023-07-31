@@ -1,6 +1,6 @@
 # Laravel Repository
 
-Just a simple artisan command to create your repository pattern files with ease.
+Just a simple artisan command to generate your repository pattern files with ease.
 
 ## Installation
 
@@ -19,8 +19,6 @@ php artisan repository:generate
 ```
 
 And it will ask you some questions. See examples below.
-
----
 
 ### Generate A Repository Interface
 
@@ -96,8 +94,6 @@ Then choose interfaces that you want to extend, you can either type the interfac
 
 And done.
 
----
-
 ### Generate A Repository Class
 
 Run:
@@ -169,3 +165,11 @@ And it will ask you to choose which interfaces do you want to implement.
 ```
 
 And done.
+
+## Configuration
+
+Most of the time, you don't need to configure anything. But in case you want to configure the path, you can publish the configuration file with this simple command.
+
+```bash
+php artisan vendor:publish --tag=laravel-repository-config
+```
