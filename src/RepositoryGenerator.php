@@ -25,6 +25,10 @@ final class RepositoryGenerator extends Generator
 
         $directory = $this->file()->replace('\\', '/')->beforeLast('/')->value();
 
+        if (!File::exists($this->getInterfacePath())) {
+            File::makeDirectory($this->getInterfacePath(), recursive: true);
+        }
+
         if (!File::exists($directory)) {
             File::makeDirectory($directory, recursive: true);
         }
