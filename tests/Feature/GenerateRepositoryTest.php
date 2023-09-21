@@ -84,6 +84,8 @@ final class GenerateRepositoryTest extends TestCase
     {
         $this->generateDummyInterfaces();
 
+        RepositoryGenerator::fake();
+
         $repository = 'TestingRepository';
         $existingInterfaces = $this->existingInterfaces()->toArray();
 

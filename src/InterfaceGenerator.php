@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Theozebua\LaravelRepository\Enums\StubEnum;
 
-final class InterfaceGenerator extends Generator
+final class InterfaceGenerator extends Generator implements GeneratorInterface
 {
     use PathTrait;
 
@@ -67,7 +67,7 @@ final class InterfaceGenerator extends Generator
                     $fullyQualifiedClassName->afterLast('\\'),
                     $this->chosenInterfaces()->map(
                         callback: fn (string $interface): string => "use {$interface};"
-                    )->join("\n"),
+                    )->join(PHP_EOL),
                     $this->chosenInterfaces()->map(
                         callback: fn (string $interface): string => Str::of($interface)
                             ->afterLast('\\')

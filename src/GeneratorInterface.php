@@ -7,4 +7,6 @@ namespace Theozebua\LaravelRepository;
 interface GeneratorInterface
 {
     public function generate(bool $withInterfaces = false): void;
+
+    public function destroy(): void;
 }
