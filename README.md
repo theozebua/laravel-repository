@@ -166,6 +166,8 @@ And it will ask you to choose which interfaces do you want to implement.
 
 And done.
 
+> Note: If your interface use php standard class or constant, make sure you add backslash `\` before it. E.g. `\PHP_EOL` or `\Iterator`, etc. Or you can use "use statement" on the top of the file. E.g. `use PHP_EOL` or `use Iterator`, etc then you can use it without the backslash.
+
 ## Configuration
 
 Most of the time, you don't need to configure anything. But in case you want to configure the path, you can publish the configuration file with this simple command.
