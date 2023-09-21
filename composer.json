@@ -4,13 +4,16 @@
   "type": "library",
   "license": "MIT",
   "scripts": {
-    "fix-style": "vendor/bin/pint",
+    "lint": "vendor/bin/pint --test",
     "test": "vendor/bin/testbench package:test"
   },
   "autoload": {
     "psr-4": {
       "Theozebua\\LaravelRepository\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers/constants.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

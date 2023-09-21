@@ -8,11 +8,12 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 
-abstract class Generator implements GeneratorInterface
+abstract class Generator
 {
     protected string $stubPath = __DIR__ . '/Console/stubs/';
 
     private Collection $chosenInterfaces;
+
     private string $stub;
 
     public function __construct(

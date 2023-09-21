@@ -9,15 +9,20 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use Illuminate\Support\Stringable;
 use Theozebua\LaravelRepository\Console\Commands\RepositoryMakeCommand;
+use Theozebua\LaravelRepository\Macros\Collection\Recursive;
 use Theozebua\LaravelRepository\Macros\Stringable\FullyQualifiedClassName;
 
 final class ServiceProvider extends LaravelServiceProvider
 {
     public function register(): void
     {
-        Collection::make($this->macros())
+        Collection::make($this->stringableMacros())
             ->reject(fn (string $macro): bool => Stringable::hasMacro($macro))
             ->each(fn (string $macro, string $class) => Stringable::macro($macro, App::make($class)()));
+
+        Collection::make($this->collectionMacros())
+            ->reject(fn (string $macro): bool => Collection::hasMacro($macro))
+            ->each(fn (string $macro, string $class) => Collection::macro($macro, App::make($class)()));
     }
 
     public function boot(): void
@@ -35,10 +40,17 @@ final class ServiceProvider extends LaravelServiceProvider
         ], 'laravel-repository-config');
     }
 
-    private function macros(): array
+    protected function stringableMacros(): array
     {
         return [
             FullyQualifiedClassName::class => 'className',
+        ];
+    }
+
+    protected function collectionMacros(): array
+    {
+        return [
+            Recursive::class => 'recursive',
         ];
     }
 }

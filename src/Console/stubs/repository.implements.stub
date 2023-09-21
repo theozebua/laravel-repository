@@ -8,5 +8,5 @@ namespace {{ NAMESPACE }};
 
 class {{ REPOSITORY }} implements {{ INTERFACES }}
 {
-    //
+{{ METHODS }}
 }
