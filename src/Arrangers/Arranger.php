@@ -9,33 +9,40 @@ use Illuminate\Support\Str;
 
 abstract class Arranger
 {
+    /**
+     * This is for union type.
+     */
+    public const PIPE = '|';
+
+    /**
+     * This is for intersection type or parameter that will be passed by reference.
+     */
+    public const AMPERSAND = '&';
+
+    /**
+     * This is for optional type that can accept or return null.
+     */
+    public const QUESTION_MARK = '?';
+
     protected function processType(
         string &$arrangedMethodOrParam,
         \ReflectionNamedType|\ReflectionUnionType|\ReflectionIntersectionType $type,
     ) {
         if ($type->allowsNull() && $type instanceof \ReflectionNamedType) {
-            $arrangedMethodOrParam .= '?';
+            $arrangedMethodOrParam .= self::QUESTION_MARK;
         }
 
-        switch (true) {
-            case $type instanceof \ReflectionNamedType:
-                $arrangedMethodOrParam .= $this->processTypeName($type);
+        if ($type instanceof \ReflectionNamedType) {
+            $arrangedMethodOrParam .= $this->processTypeName($type);
+        }
 
-                break;
+        $union = $type instanceof \ReflectionUnionType;
+        $intersection = $type instanceof \ReflectionIntersectionType;
 
-            case $type instanceof \ReflectionUnionType:
-                $arrangedMethodOrParam .= Collection::make($type->getTypes())->map(function (\ReflectionNamedType $type): string {
-                    return $this->processTypeName($type);
-                })->join('|');
-
-                break;
-
-            case $type instanceof \ReflectionIntersectionType:
-                $arrangedMethodOrParam .= Collection::make($type->getTypes())->map(function (\ReflectionNamedType $type): string {
-                    return $this->processTypeName($type);
-                })->join('&');
-
-                break;
+        if ($union || $intersection) {
+            $arrangedMethodOrParam .= Collection::make($type->getTypes())->map(function (\ReflectionNamedType $type): string {
+                return $this->processTypeName($type);
+            })->join($union ? self::PIPE : ($intersection ? self::AMPERSAND : ''));
         }
     }
 
