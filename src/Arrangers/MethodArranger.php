@@ -26,38 +26,41 @@ final class MethodArranger extends Arranger implements ArrangerInterface
 
     public function arrange(): string
     {
-        return $this->methods->map(function (\ReflectionMethod $method, int $key): string {
-            $parameters = Collection::make($method->getParameters());
-
+        return $this->methods->map(function (\ReflectionMethod $method): string {
             $arrangedMethod = '';
 
-            $arrangedMethod = PHP_TAB . 'public ';
-
-            if ($method->isStatic()) {
-                $arrangedMethod .= 'static ';
-            }
-
-            $arrangedMethod .= "function {$method->getName()}(";
-
-            if ($parameters->isNotEmpty()) {
-                $arrangedMethod .= ParameterArranger::from($parameters)->arrange();
-            }
-
-            $arrangedMethod .= ')';
-
-            if ($method->hasReturnType()) {
-                $arrangedMethod .= ": ";
-
-                $returnType = $method->getReturnType();
-
-                $this->processType($arrangedMethod, $returnType);
-            }
-
-            $arrangedMethod .= PHP_EOL . PHP_TAB . '{';
-            $arrangedMethod .= PHP_EOL . PHP_TAB . PHP_TAB . sprintf("throw new \\Exception('%s');", 'Implement me...');
-            $arrangedMethod .= PHP_EOL . PHP_TAB . '}';
+            $this->processMethod($arrangedMethod, $method);
 
             return $arrangedMethod;
         })->join(PHP_EOL . PHP_EOL);
+    }
+
+    protected function processMethod(string &$arrangedMethod, \ReflectionMethod $method): void
+    {
+        $arrangedMethod = PHP_TAB . 'public ';
+
+        if ($method->isStatic()) {
+            $arrangedMethod .= 'static ';
+        }
+
+        $arrangedMethod .= "function {$method->getName()}(";
+
+        $parameters = Collection::make($method->getParameters());
+
+        if ($parameters->isNotEmpty()) {
+            $arrangedMethod .= ParameterArranger::from($parameters)->arrange();
+        }
+
+        $arrangedMethod .= ')';
+
+        if ($method->hasReturnType()) {
+            $arrangedMethod .= ": ";
+
+            $this->processType($arrangedMethod, $method->getReturnType());
+        }
+
+        $arrangedMethod .= PHP_EOL . PHP_TAB . '{';
+        $arrangedMethod .= PHP_EOL . PHP_TAB . PHP_TAB . sprintf("throw new \\Exception('%s');", 'Implement me...');
+        $arrangedMethod .= PHP_EOL . PHP_TAB . '}';
     }
 }
