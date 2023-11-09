@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
-use Theozebua\LaravelRepository\Enums\StubEnum;
 use Theozebua\LaravelRepository\Arrangers\MethodArranger;
+use Theozebua\LaravelRepository\Enums\StubEnum;
 
 final class RepositoryGenerator extends Generator implements GeneratorInterface
 {
@@ -23,7 +23,7 @@ final class RepositoryGenerator extends Generator implements GeneratorInterface
     protected static bool $fake = false;
 
     public function __construct(
-        private Stringable|string|null $file = null,
+        private null|string|Stringable $file = null,
     ) {
         parent::__construct();
 

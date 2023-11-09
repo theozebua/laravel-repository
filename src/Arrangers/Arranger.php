@@ -24,23 +24,22 @@ abstract class Arranger
      */
     public const QUESTION_MARK = '?';
 
-    protected function processType(
-        string &$arrangedMethodOrParam,
-        \ReflectionNamedType|\ReflectionUnionType|\ReflectionIntersectionType $type,
-    ) {
+    protected function processType(string &$arranged, \ReflectionType $type)
+    {
         if ($type->allowsNull() && $type instanceof \ReflectionNamedType) {
-            $arrangedMethodOrParam .= self::QUESTION_MARK;
+            $arranged .= self::QUESTION_MARK;
         }
 
         if ($type instanceof \ReflectionNamedType) {
-            $arrangedMethodOrParam .= $this->processTypeName($type);
+            $arranged .= $this->processTypeName($type);
         }
 
         $union = $type instanceof \ReflectionUnionType;
         $intersection = $type instanceof \ReflectionIntersectionType;
 
         if ($union || $intersection) {
-            $arrangedMethodOrParam .= Collection::make($type->getTypes())->map(function (\ReflectionNamedType $type): string {
+            /** @var \ReflectionUnionType|\ReflectionIntersectionType $type */
+            $arranged .= Collection::make($type->getTypes())->map(function (\ReflectionNamedType $type): string {
                 return $this->processTypeName($type);
             })->join($union ? self::PIPE : ($intersection ? self::AMPERSAND : ''));
         }

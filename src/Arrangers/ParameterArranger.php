@@ -29,34 +29,51 @@ final class ParameterArranger extends Arranger implements ArrangerInterface
         return $this->parameters->map(function (\ReflectionParameter $parameter): string {
             $arrangedParameter = '';
 
-            $this->processParameter($arrangedParameter, $parameter);
+            $this->processParameter($parameter, $arrangedParameter);
 
             return $arrangedParameter;
         })->join(', ');
     }
 
-    protected function processParameter(string &$arrangedParameter, \ReflectionParameter $parameter): void
+    protected function processParameter(\ReflectionParameter $parameter, string &$arrangedParameter): void
+    {
+        $this->processParameterType($parameter, $arrangedParameter);
+        $this->handlePassedByReference($parameter, $arrangedParameter);
+        $this->processParameterName($parameter, $arrangedParameter);
+        $this->handleDefaultValue($parameter, $arrangedParameter);
+    }
+
+    protected function processParameterType(\ReflectionParameter $parameter, string &$arrangedParameter): void
     {
         if ($parameter->hasType()) {
             $this->processType($arrangedParameter, $parameter->getType());
 
             $arrangedParameter .= ' ';
         }
+    }
 
+    protected function handlePassedByReference(\ReflectionParameter $parameter, string &$arrangedParameter): void
+    {
         if (!$parameter->canBePassedByValue()) {
             $arrangedParameter .= self::AMPERSAND;
         }
+    }
 
+    protected function processParameterName(\ReflectionParameter $parameter, string &$arrangedParameter): void
+    {
         $arrangedParameter .= "\${$parameter->getName()}";
+    }
 
+    protected function handleDefaultValue(\ReflectionParameter $parameter, string &$arrangedParameter): void
+    {
         if ($parameter->isDefaultValueAvailable()) {
             $arrangedParameter .= ' = ';
 
-            $this->processDefaultValue($arrangedParameter, $parameter);
+            $this->processDefaultValue($parameter, $arrangedParameter);
         }
     }
 
-    protected function processDefaultValue(string &$arrangedParameter, \ReflectionParameter $parameter): void
+    protected function processDefaultValue(\ReflectionParameter $parameter, string &$arrangedParameter): void
     {
         if ($parameter->isDefaultValueConstant()) {
             $arrangedParameter .= "\\{$parameter->getDefaultValueConstantName()}";

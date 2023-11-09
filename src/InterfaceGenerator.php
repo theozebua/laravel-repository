@@ -17,7 +17,7 @@ final class InterfaceGenerator extends Generator implements GeneratorInterface
     protected bool $wantsToExtend;
 
     public function __construct(
-        private Stringable|string|null $file = null,
+        private null|string|Stringable $file = null,
     ) {
         parent::__construct();
 
