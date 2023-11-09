@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 enum FileTypeEnum: string
 {
     case INTERFACE = 'Interface';
+
     case REPOSITORY = 'Repository';
 
     public static function list(): array

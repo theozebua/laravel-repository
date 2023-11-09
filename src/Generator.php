@@ -17,7 +17,7 @@ abstract class Generator
     private string $stub;
 
     public function __construct(
-        private Stringable|string|null $file = null,
+        private null|string|Stringable $file = null,
     ) {
         //
     }

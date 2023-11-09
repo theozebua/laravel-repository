@@ -16,11 +16,11 @@ final class ServiceProvider extends LaravelServiceProvider
 {
     public function register(): void
     {
-        Collection::make($this->stringableMacros())
+        $this->stringableMacros()
             ->reject(fn (string $macro): bool => Stringable::hasMacro($macro))
             ->each(fn (string $macro, string $class) => Stringable::macro($macro, App::make($class)()));
 
-        Collection::make($this->collectionMacros())
+        $this->collectionMacros()
             ->reject(fn (string $macro): bool => Collection::hasMacro($macro))
             ->each(fn (string $macro, string $class) => Collection::macro($macro, App::make($class)()));
     }
@@ -40,17 +40,17 @@ final class ServiceProvider extends LaravelServiceProvider
         ], 'laravel-repository-config');
     }
 
-    protected function stringableMacros(): array
+    protected function stringableMacros(): Collection
     {
-        return [
+        return Collection::make([
             FullyQualifiedClassName::class => 'className',
-        ];
+        ]);
     }
 
-    protected function collectionMacros(): array
+    protected function collectionMacros(): Collection
     {
-        return [
+        return Collection::make([
             Recursive::class => 'recursive',
-        ];
+        ]);
     }
 }

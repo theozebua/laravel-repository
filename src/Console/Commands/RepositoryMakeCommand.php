@@ -25,10 +25,12 @@ final class RepositoryMakeCommand extends Command
         switch ($type) {
             case FileTypeEnum::INTERFACE->value:
                 $this->generateInterface();
+
                 break;
 
             case FileTypeEnum::REPOSITORY->value:
                 $this->generateRepository();
+
                 break;
         }
     }
