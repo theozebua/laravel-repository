@@ -6,6 +6,7 @@ namespace Theozebua\LaravelRepository\Arrangers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Theozebua\LaravelRepository\Support\UseStatementsHolder;
 
 abstract class Arranger
 {
@@ -53,6 +54,8 @@ abstract class Arranger
             return $name;
         }
 
-        return sprintf('\\%s', Str::of($name)->className());
+        UseStatementsHolder::add($name);
+
+        return Str::of($name)->classBasename()->value();
     }
 }
