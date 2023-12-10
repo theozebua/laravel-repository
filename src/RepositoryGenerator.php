@@ -11,14 +11,14 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Theozebua\LaravelRepository\Arrangers\MethodArranger;
 use Theozebua\LaravelRepository\Enums\StubEnum;
+use Theozebua\LaravelRepository\Enums\UseStatementType;
+use Theozebua\LaravelRepository\Support\UseStatementsHolder;
 
 final class RepositoryGenerator extends Generator implements GeneratorInterface
 {
     use PathTrait;
 
     protected bool $wantsToImplement;
-
-    protected Collection $useStatements;
 
     protected static bool $fake = false;
 
@@ -69,29 +69,37 @@ final class RepositoryGenerator extends Generator implements GeneratorInterface
             Config::get('laravel-repository.delimiter'),
         );
 
-        $this->useStatements = $this->chosenInterfaces();
+        $this->chosenInterfaces()->each(function (string $interface): void {
+            UseStatementsHolder::add($interface);
+        });
 
         $contents = Str::of(File::get($this->stub()))
             ->replace(
                 [
                     '{{ NAMESPACE }}',
                     '{{ REPOSITORY }}',
+                    '{{ METHODS }}',
                     '{{ USE_STATEMENTS }}',
                     '{{ INTERFACES }}',
-                    '{{ METHODS }}',
                 ],
                 [
                     $fullyQualifiedClassName->beforeLast('\\'),
                     $fullyQualifiedClassName->afterLast('\\'),
-                    $this->useStatements->map(
-                        callback: fn (string $interface): string => "use {$interface};"
-                    )->join(PHP_EOL),
+                    $this->implementsMethods(),
+                    collect(UseStatementsHolder::get())->unique()->map(
+                        callback: function (array $useStatement): string {
+                            return match ($useStatement['type']) {
+                                UseStatementType::CLASSNAME => sprintf('use %s;', $useStatement['value']),
+                                UseStatementType::FUNCTION => sprintf('use function %s;', $useStatement['value']),
+                                UseStatementType::CONSTANT => sprintf('use const %s;', $useStatement['value']),
+                            };
+                        }
+                    )->sort()->join(PHP_EOL),
                     $this->chosenInterfaces()->map(
                         callback: fn (string $interface): string => Str::of($interface)
                             ->afterLast('\\')
                             ->value(),
                     )->join(', '),
-                    $this->implementsMethods(),
                 ],
             );
 

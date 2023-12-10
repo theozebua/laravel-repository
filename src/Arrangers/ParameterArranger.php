@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Theozebua\LaravelRepository\Arrangers;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Theozebua\LaravelRepository\Enums\UseStatementType;
+use Theozebua\LaravelRepository\Support\UseStatementsHolder;
 
 final class ParameterArranger extends Arranger implements ArrangerInterface
 {
@@ -76,7 +79,13 @@ final class ParameterArranger extends Arranger implements ArrangerInterface
     protected function processDefaultValue(\ReflectionParameter $parameter, string &$arrangedParameter): void
     {
         if ($parameter->isDefaultValueConstant()) {
-            $arrangedParameter .= "\\{$parameter->getDefaultValueConstantName()}";
+            $constant = Str::of($parameter->getDefaultValueConstantName());
+
+            $constant->contains('\\')
+                ? UseStatementsHolder::add($constant->beforeLast('::')->value())
+                : UseStatementsHolder::add($constant->value(), UseStatementType::CONSTANT);
+
+            $arrangedParameter .= $constant->classBasename()->value();
 
             return;
         }
