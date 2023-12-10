@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "vendor/bin/pint --test",
+    "format": "vendor/bin/pint",
     "test": "vendor/bin/testbench package:test"
   },
   "autoload": {
